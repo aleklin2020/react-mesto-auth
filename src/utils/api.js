@@ -91,9 +91,9 @@ class Api {
   }
 }
 const api = new Api({
-  link: "https://mesto.nomoreparties.co/v1/cohort-25",
+  link: "https://mesto.nomoreparties.co/v1/cohort-26",
   token: {
-    authorization: "e46362ce-1599-486f-9051-b9d59ed9a09d",
+    authorization: "29c1407a-64fb-4697-b795-3104cc65fb81",
     "Content-Type": "application/json",
   },
 });
