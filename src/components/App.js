@@ -75,6 +75,7 @@ function App() {
       });
   }
   function handleUpdateUser(newName) {
+    console.log(newName)
     api
       .setUserInform(newName.name, newName.about)
       .then((data) => {
@@ -125,12 +126,15 @@ function App() {
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
-  const [IsImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
+  const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   function handleCardClick(card) {
     setSelectedCard(card);
     setIsImagePopupOpen(true);
   }
+
+  
+
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
@@ -138,6 +142,7 @@ function App() {
     setIsImagePopupOpen(false);
     setSelectedCard({});
     setIsTooltipOpen(false);
+
   }
   React.useEffect(() => {
     const handleEsc = (e) => {
@@ -150,7 +155,7 @@ function App() {
       isEditProfilePopupOpen === true ||
       isEditAvatarPopupOpen === true ||
       isAddPlacePopupOpen === true ||
-      IsImagePopupOpen === true
+      isImagePopupOpen === true
     ) {
       window.addEventListener("keydown", handleEsc);
     }
@@ -161,7 +166,7 @@ function App() {
     isEditProfilePopupOpen,
     isEditAvatarPopupOpen,
     isAddPlacePopupOpen,
-    IsImagePopupOpen,
+    isImagePopupOpen,
   ]);
 
   // новый код
@@ -202,29 +207,18 @@ function App() {
   }
 
   function registration({ email, password }) {
-    auth
+       auth
       .register(email, password)
       .then((res) => {
-        if (res.status === 201) {
+           if (res.statusCode !== 201) {
           handleInfoTooltipContent({
             iconPath: registrationOk,
             text: "Вы успешно зарегестрировались!",
           });
           handleInfoTooltipOpen();
-
           setTimeout(history.push, 3000, "/sign-in");
           setTimeout(closeAllPopups, 2500);
-        }
-        if (res.status === 400) {
-          console.log("Введеный email уже зарегестрирован!");
-          handleInfoTooltipContent({
-            iconPath: registrationWrong,
-            text: "Введеный email уже зарегестрирован!",
-          });
-          handleInfoTooltipOpen();
-          setTimeout(closeAllPopups, 2500);
-        }
-      })
+        }})
       .catch((err) => {
         handleInfoTooltipContent({
           iconPath: registrationWrong,
@@ -235,7 +229,7 @@ function App() {
         console.log(err);
       });
   }
-
+  
   function authorization({ email, password }) {
     auth
       .authorize({ email, password })
@@ -320,7 +314,7 @@ function App() {
           <ImagePopup
             card={selectedCard}
             onClose={closeAllPopups}
-            isOpen={IsImagePopupOpen}
+            isOpen={isImagePopupOpen}
           />
           <PopupWithForm
             name="popup_delete"

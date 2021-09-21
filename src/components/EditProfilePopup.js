@@ -12,7 +12,7 @@ function EditProfilePopup(props) {
       setName(currentUser.name);
       setAbout(currentUser.about);
     }
-  }, [currentUser, props.isOpen]);
+  }, [currentUser]);
 
   function handleChangeName(e) {
     setName(e.target.value);
@@ -27,7 +27,7 @@ function EditProfilePopup(props) {
     // Передаём значения управляемых компонентов во внешний обработчик
 
     props.onUpdateUser({
-      name,
+      name: name ,
       about: description,
     });
   }
@@ -72,4 +72,3 @@ function EditProfilePopup(props) {
   );
 }
 export default EditProfilePopup;
-
