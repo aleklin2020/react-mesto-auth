@@ -27,7 +27,9 @@ import * as auth from "../utils/auth";
 
 function App() {
   const [currentUser, setСurrentUser] = React.useState("");
+  const [loggedIn, setLoggedIn] = React.useState(false);
   React.useEffect(() => {
+    if (loggedIn) {
     api
       .getUserInform()
       .then((data) => {
@@ -36,9 +38,11 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+    }
+  }, [loggedIn]);
   const [cards, setCards] = React.useState([]);
   React.useEffect(() => {
+    if (loggedIn) {
     api
       .getIntialCards()
       .then((res) => {
@@ -47,7 +51,8 @@ function App() {
       .catch((res) => {
         console.log(`Error:${res}`);
       });
-  }, []);
+    }
+  }, [loggedIn]);
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
@@ -172,7 +177,7 @@ function App() {
   // новый код
 
   const [isTooltipOpen, setIsTooltipOpen] = React.useState(false);
-  const [loggedIn, setLoggedIn] = React.useState(false);
+  
   const [message, setMessage] = React.useState({ iconPath: "", text: "" });
   const [email, setEmail] = React.useState("");
   const history = useHistory();
@@ -233,11 +238,25 @@ function App() {
   function authorization({ email, password }) {
     auth
       .authorize({ email, password })
-      .then((data) => {
+     .then((data) => {
         if (!data) {
           throw new Error("Произошла ошибка");
         }
+
+         auth.getContent(data)
+          .then((res) => {
+            setEmail(res.data.email);
+          })
+          .catch(err => console.log(err))
+
         setLoggedIn(true);
+         api.getUserInform().then((user) => setСurrentUser(user.data)
+        )
+          .catch((err) => {
+            console.log(err)
+          });
+
+
         handleInfoTooltipContent({
           iconPath: registrationOk,
           text: "Вы успешны авторизованы!",

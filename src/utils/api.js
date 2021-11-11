@@ -1,8 +1,10 @@
 class Api {
-  constructor({ link, token }) {
+  constructor({ link, headers }) {
     this._baseUrl = link;
-    this._headers = token;
+    this._headers = headers;
   }
+    
+
   _checkResponse(res) {
     if (res.ok) {
       return res.json();
@@ -13,6 +15,8 @@ class Api {
   // Получение информаций профиля с сервера
   getUserInform() {
     return fetch(`${this._baseUrl}/users/me`, {
+        method: 'GET',
+      // credentials: 'include',
       headers: this._headers,
     }).then((res) => {
       return this._checkResponse(res);
@@ -22,7 +26,8 @@ class Api {
   setUserInform(name, profession) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
-      headers: this._headers,
+     // credentials: 'include',
+       headers: this._headers,
       body: JSON.stringify({
         name: name,
         about: profession,
@@ -35,9 +40,10 @@ class Api {
   getAvatarProfile(avatar) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
-      headers: this._headers,
+     // credentials: 'include',
+       headers: this._headers,
       body: JSON.stringify({
-        avatar: avatar,
+       avatar: avatar
       }),
     }).then((res) => {
       return this._checkResponse(res);
@@ -46,7 +52,9 @@ class Api {
   // Получение обекта карточек с сервера
   getIntialCards() {
     return fetch(`${this._baseUrl}/cards`, {
-      headers: this._headers,
+      method: 'GET',
+     // credentials: 'include',
+       headers: this._headers,
     }).then((res) => {
       return this._checkResponse(res);
     });
@@ -55,7 +63,8 @@ class Api {
   photoAddServer(newCard) {
     return fetch(`${this._baseUrl}/cards`, {
       method: "POST",
-      headers: this._headers,
+     // credentials: 'include',
+       headers: this._headers,
       body: JSON.stringify({
         name: newCard.name,
         link: newCard.link
@@ -69,13 +78,15 @@ class Api {
         if (like) {
             return fetch(`${this._baseUrl}/cards/likes/${id}`, {
                 method: 'PUT',
-                headers: this._headers,
+               // credentials: 'include',
+                 headers: this._headers,
             })
             .then(res => {return this._checkResponse(res)})
          } else {
             return fetch(`${this._baseUrl}/cards/likes/${id}`, {
                 method: 'DELETE',
-                headers: this._headers,
+              //  credentials: 'include',
+                 headers: this._headers,
             })
             .then(res => {return this._checkResponse(res)})
          }
@@ -84,16 +95,25 @@ class Api {
   deleteCard(id) {
     return fetch(`${this._baseUrl}/cards/${id}`, {
       method: "DELETE",
-      headers: this._headers,
+    //  credentials: 'include',
+       headers: this._headers,
     }).then((res) => {
       return this._checkResponse(res);
     });
   }
+
+    updateHeaders() {
+      this._headers = {
+        'Content-Type': 'application/json',
+        'Authorization':  `Bearer ${localStorage.getItem('jwt')}`
+      }
+    }
+
 }
 const api = new Api({
-  link: "https://mesto.nomoreparties.co/v1/cohort-26",
-  token: {
-    authorization: "29c1407a-64fb-4697-b795-3104cc65fb81",
+  link: "http://pictures-host.nomoredomains.rocks",
+   headers: {
+   'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
     "Content-Type": "application/json",
   },
 });
