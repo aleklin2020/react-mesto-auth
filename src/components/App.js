@@ -33,7 +33,7 @@ function App() {
     api
       .getUserInform()
       .then((data) => {
-        setСurrentUser(data);
+        setСurrentUser(data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -55,14 +55,14 @@ function App() {
   }, [loggedIn]);
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api
       .LikeCard(card._id, !isLiked)
       .then((newCard) => {
         setCards((cards) =>
-          cards.map((c) => (c._id === card._id ? newCard : c))
+          cards.map((c) => (c === card._id ? newCard : c))
         );
       })
       .catch((err) => {
@@ -84,7 +84,7 @@ function App() {
     api
       .setUserInform(newName.name, newName.about)
       .then((data) => {
-        setСurrentUser(data);
+        setСurrentUser(data.data);
         closeAllPopups();
         console.log(data);
       })
@@ -98,7 +98,7 @@ function App() {
     api
       .getAvatarProfile(newAvatar)
       .then((data) => {
-        setСurrentUser(data);
+        setСurrentUser(data.data);
         closeAllPopups();
       })
       .catch((err) => {
@@ -110,7 +110,7 @@ function App() {
     api
       .photoAddServer(newCard)
       .then((newCard) => {
-        setCards([newCard, ...cards]);
+        setCards([newCard, ...cards ]);
         closeAllPopups();
       })
       .catch((err) => {
@@ -250,7 +250,9 @@ function App() {
           .catch(err => console.log(err))
 
         setLoggedIn(true);
-         api.getUserInform().then((user) => setСurrentUser(user.data)
+         api.getUserInform()
+         .then((user) => setСurrentUser(user.data)
+          
         )
           .catch((err) => {
             console.log(err)
